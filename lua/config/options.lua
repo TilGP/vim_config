@@ -58,17 +58,17 @@ opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- Minimum window width
 opt.wrap = false -- Disable line wrap
 opt.fillchars = {
-    foldopen = "",
-    foldclose = "",
-    -- fold = "⸱",
-    fold = " ",
-    foldsep = " ",
-    diff = "╱",
-    eob = " ",
+  foldopen = "",
+  foldclose = "",
+  -- fold = "⸱",
+  fold = " ",
+  foldsep = " ",
+  diff = "╱",
+  eob = " ",
 }
 
 if vim.fn.has("nvim-0.10") == 1 then
-    opt.smoothscroll = true
+  opt.smoothscroll = true
 end
 
 -- Folding
@@ -76,18 +76,33 @@ vim.opt.foldlevel = 99
 vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
 
 if vim.fn.has("nvim-0.9.0") == 1 then
-    vim.opt.statuscolumn = [[%!v:lua.require'lazyvim.util'.ui.statuscolumn()]]
+  vim.opt.statuscolumn = [[%!v:lua.require'lazyvim.util'.ui.statuscolumn()]]
 end
 
 -- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
 if vim.fn.has("nvim-0.10") == 1 then
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
 else
-    vim.opt.foldmethod = "indent"
+  vim.opt.foldmethod = "indent"
 end
 
 vim.o.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
+
+-- Set C/C++ Compiler and CMake Generator
+vim.g.cmake_generate_options = {
+  "-DCMAKE_C_COMPILER=/home/til/.local/bin/reda-clang",
+  "-DCMAKE_CXX_COMPILER=/home/til/.local/bin/reda-clang++",
+  "-G Ninja",
+}
+
+-- Set CMake Build options
+vim.g.cmake_build_options = {
+  "-j 22",
+}
+
+-- Set CMake build dir
+vim.g.cmake_build_dir_location = "./cmake-build-"
