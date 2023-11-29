@@ -1,0 +1,3 @@
+return {
+    "nhooyr/neoman.vim",
+}
