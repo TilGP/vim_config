@@ -10,10 +10,15 @@ return {
   },
   -- add symbols-outline
   {
-    "simrat39/symbols-outline.nvim",
-    cmd = "SymbolsOutline",
-    keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
-    config = true,
+    "hedyhli/outline.nvim",
+    config = function()
+      -- Example mapping to toggle outline
+      vim.keymap.set("n", "<leader>cs", "<cmd>Outline<CR>", { desc = "Toggle Code Outline" })
+
+      require("outline").setup({
+        -- Your setup opts here (leave empty to use defaults)
+      })
+    end,
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -70,6 +75,22 @@ return {
             Y = "copy_selector",
           },
         },
+      })
+    end,
+  },
+
+  -- add rainbow csv
+  {
+    "mechatroner/rainbow_csv",
+  },
+  {
+    "s1n7ax/nvim-window-picker",
+    name = "window-picker",
+    event = "VeryLazy",
+    version = "2.*",
+    config = function()
+      require("window-picker").setup({
+        hint = "floating-big-letter",
       })
     end,
   },
