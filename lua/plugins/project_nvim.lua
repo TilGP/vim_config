@@ -4,7 +4,7 @@ return {
     manual_mode = false,
     silent_chdir = false,
     detection_methods = { "lsp", "pattern" },
-    patterns = { ".git", ".project", ".project.lua", ".project.toml", "=app" },
+    patterns = { ".git", ".project", ".project.lua", ".project.toml" },
     scope_chdir = "global",
   },
   event = "VeryLazy",
