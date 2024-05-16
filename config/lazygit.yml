@@ -1,6 +1,0 @@
-# https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
-gui:
-  theme:
-    activeBorderColor:
-      - red
-      - bold
