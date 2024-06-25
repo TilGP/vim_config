@@ -1,6 +1,10 @@
 return {
-  "alfaix/neotest-gtest",
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-neotest/nvim-nio",
+      "alfaix/neotest-gtest",
+    },
   },
 }

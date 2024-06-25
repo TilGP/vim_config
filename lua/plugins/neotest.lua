@@ -1,69 +1,22 @@
 return {
   "nvim-neotest/neotest",
-  dependencies = { "nvim-neotest/nvim-nio", "alfaix/neotest-gtest", "orjangj/neotest-ctest" },
+  dependencies = { "nvim-neotest/nvim-nio", "alfaix/neotest-gtest" },
   opts = {
     -- Can be a list of adapters like what neotest expects,
     -- or a list of adapter names,
     -- or a table of adapter names, mapped to adapter configs.
     -- The adapter will then be automatically loaded with the config.
     adapters = {
-      require("neotest-ctest").setup({
-        -- fun(string) -> string: Find the project root directory given a current directory
-        -- to work from.
-        root = function(dir)
-          -- by default, it will use neotest.lib.files.match_root_pattern with the following entries
-          return require("neotest.lib").files.match_root_pattern(
-            -- NOTE: CMakeLists.txt is not a good candidate as it can be found in
-            -- more than one directory
-            "CMakePresets.json",
-            "compile_commands.json",
-            ".clangd",
-            ".clang-format",
-            ".clang-tidy",
-            "build",
-            "out",
-            ".git"
-          )(dir)
-        end,
-
-        -- fun(string) -> bool: Takes a file path as string and returns true if it contains tests.
-        -- This function is called often by neotest, so make sure you don't do any heavy duty work.
+      --require("neotest-gtest").setup({
+      --  is_test_file = function(file)
+      --    return file:match("%.test%.cpp$") or file:match("%.spec%.cpp$") or file:match("%tst-%.cpp$")
+      --  end,
+      --}),
+      ["neotest-gtest"] = {
         is_test_file = function(file)
-          if file:match("_test.cpp$") or file:match(".test.cpp$") or file:match("^tst-") then
-            return true
-          end
-          return false
+          return file:match("%.test%.cpp$") or file:match("%.spec%.cpp$") or file:match("%tst-%.cpp$")
         end,
-
-        -- fun(string, string, string) -> bool: Filter directories when searching for test files.
-        -- Best to keep this as-is and set per-project settings in neotest instead.
-        -- See :h neotest.Config.discovery.
-        filter_dir = function(name, rel_path, root)
-          -- If you don't configure filter_dir through neotest, and you leave it as-is,
-          -- it will filter the following directories by default: build, cmake, doc,
-          -- docs, examples, out, scripts, tools, venv.
-        end,
-
-        -- What frameworks to consider when performing auto-detection of test files.
-        -- Priority can be configured by ordering/removing list items to your needs.
-        -- By default, each test file will be queried with the given frameworks in the
-        -- following order.
-        frameworks = { "gtest", "catch2", "doctest" },
-
-        -- What extra args should ALWAYS be sent to CTest? Note that most of CTest arguments
-        -- are not expected to be used (or work) with this plugin, but some might be useful
-        -- depending on your needs. For instance:
-        --   extra_args = {
-        --     "--stop-on-failure",
-        --     "--schedule-random",
-        --     "--timeout",
-        --     "<seconds>",
-        --   }
-        -- If you want to send extra_args for one given invocation only, send them to
-        -- `neotest.run.run({extra_args = ...})` instead. see :h neotest.RunArgs for details.
-        extra_args = {},
-      }),
-      -- require("neotest-gtest").setup({}),
+      },
     },
     -- Example for loading neotest-go with a custom config
     -- adapters = {
