@@ -1,3 +1,0 @@
-return {
-  "orjangj/neotest-ctest",
-}
