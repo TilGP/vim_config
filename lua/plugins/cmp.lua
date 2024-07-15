@@ -6,6 +6,7 @@ return {
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
+        "joshzcold/cmp-jenkinsfile",
     },
     -- Not all LSP servers add brackets when completing a function.
     -- To better deal with this, LazyVim adds a custom option to cmp,
@@ -31,7 +32,7 @@ return {
                 ["<C-b>"] = cmp.mapping.scroll_docs(-4),
                 ["<C-f>"] = cmp.mapping.scroll_docs(4),
                 ["<C-Space>"] = cmp.mapping.complete(),
-                ["<CR>"] = LazyVim.cmp.confirm({ select = auto_select }),
+                ["<tab>"] = LazyVim.cmp.confirm({ select = auto_select }),
                 ["<C-y>"] = LazyVim.cmp.confirm({ select = true }),
                 ["<S-CR>"] = LazyVim.cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
                 ["<C-CR>"] = function(fallback)
@@ -42,8 +43,13 @@ return {
             sources = cmp.config.sources({
                 { name = "nvim_lsp" },
                 { name = "path" },
-            }, {
                 { name = "buffer" },
+                {
+                    name = "jenkinsfile",
+                    option = {
+                        jenkins_url = "https://jenkins.reisedirektanbindung.check24.de",
+                    },
+                },
             }),
             formatting = {
                 format = function(_, item)
