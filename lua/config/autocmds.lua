@@ -11,3 +11,8 @@ vim.cmd([[
 vim.cmd([[
   autocmd BufRead,BufNewFile *.ansi AnsiEsc
 ]])
+
+-- associate *.ssv with filetzpe=csv_semicolon
+vim.cmd([[
+  autocmd BufNewFile,BufRead *.ssv set filetype=csv_semicolon
+  ]])
