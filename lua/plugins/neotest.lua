@@ -7,11 +7,11 @@ return {
         -- or a table of adapter names, mapped to adapter configs.
         -- The adapter will then be automatically loaded with the config.
         adapters = {
-            ["neotest-gtest"] = {
-                is_test_file = function(file)
-                    return file:match("%.test%.cpp$") or file:match("%.spec%.cpp$") or file:match("%tst-%.cpp$")
-                end,
-            },
+            -- ["neotest-gtest"] = {
+            --     is_test_file = function(file)
+            --         return file:match("%.test%.cpp$") or file:match("%.spec%.cpp$") or file:match("%tst-%.cpp$")
+            --     end,
+            -- },
         },
         -- Example for loading neotest-go with a custom config
         -- adapters = {

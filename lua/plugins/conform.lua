@@ -16,7 +16,7 @@ return {
         ---@class ConformOpts
         local opts = {
             -- LazyVim will use these options when formatting with the conform.nvim formatter
-            format = {
+            default_format_format_opts = {
                 timeout_ms = 3000,
                 async = false, -- not recommended to change
                 quiet = false, -- not recommended to change
@@ -30,8 +30,10 @@ return {
                 cpp = { "clang-format" },
                 hpp = { "clang-format" },
                 c = { "clang-format" },
-                sql = { "sql_formatter" },
+                sql = { "sqlfmt" },
                 python = { "black" },
+                xml = { "xmlformat" },
+                markdown = { "markdownlint" },
             },
 
             -- The options you set here will be merged with the builtin formatters.
