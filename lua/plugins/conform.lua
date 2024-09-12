@@ -22,7 +22,7 @@ return {
                 quiet = false, -- not recommended to change
                 lsp_format = "fallback", -- not recommended to change
             },
-            ---@type table<string, conform.FormatterUnit[]>
+            ---@type table<string, table>
             formatters_by_ft = {
                 lua = { "stylua" },
                 fish = { "fish_indent" },
@@ -34,6 +34,7 @@ return {
                 python = { "black" },
                 xml = { "xmlformat" },
                 markdown = { "markdownlint" },
+                go = { "gofumpt" },
             },
 
             -- The options you set here will be merged with the builtin formatters.

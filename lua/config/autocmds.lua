@@ -4,7 +4,7 @@
 
 -- Associate "Jeninsfile" with groovy filetype
 vim.cmd([[
-  autocmd BufRead,BufNewFile Jenkinsfile set filetype=groovy
+  autocmd BufRead,BufNewFile Jenkinsfile,*.jenkinsfile set filetype=groovy
 ]])
 
 -- Run :AnsiEsc on files with the .ansi ending
