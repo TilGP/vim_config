@@ -33,7 +33,7 @@ return {
                 sql = { "sqlfmt" },
                 python = { "black" },
                 xml = { "xmlformat" },
-                markdown = { "markdownlint" },
+                markdown = { "mdformat" },
                 go = { "gofumpt" },
             },
 
