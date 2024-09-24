@@ -8,3 +8,5 @@ end, {})
 
 -- because I'm dumb and keep typing :Qa instead of :qa :)
 vim.cmd("command! Qa qa")
+
+vim.opt.spelllang = { "de", "en" }
