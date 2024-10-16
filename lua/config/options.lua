@@ -3,3 +3,7 @@
 -- Add any additional options here
 
 local opt = vim.opt
+
+opt.scrolloff = 10
+
+local g = vim.g

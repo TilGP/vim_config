@@ -35,6 +35,8 @@ return {
                 xml = { "xmlformat" },
                 markdown = { "mdformat" },
                 go = { "gofumpt" },
+                tex = { "latexindent" },
+                json = { "prettier" },
             },
 
             -- The options you set here will be merged with the builtin formatters.

@@ -41,7 +41,7 @@ return {
                 console = "integratedTerminal",
             },
             cmake_executor = { -- executor to use
-                name = "toggleterm", -- name of the executor
+                name = "quickfix", -- name of the executor
                 opts = {}, -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
                 default_opts = { -- a list of default and possible values for executors
                     quickfix = {
@@ -135,8 +135,8 @@ return {
                 },
             },
             cmake_notifications = {
-                runner = { enabled = true },
-                executor = { enabled = true },
+                runner = { enabled = false },
+                executor = { enabled = false },
                 spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- icons used for progress display
                 refresh_rate_ms = 100, -- how often to iterate icons
             },
