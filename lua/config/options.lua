@@ -6,4 +6,7 @@ local opt = vim.opt
 
 opt.scrolloff = 10
 
-vim.opt.spelllang = { "de", "en" }
+opt.spelllang = { "de", "en" }
+
+-- disable conceal
+opt.conceallevel = 0
