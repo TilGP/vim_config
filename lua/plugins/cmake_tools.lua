@@ -9,7 +9,6 @@ local cmake_command = os.getenv("CMAKE_COMMAND") or "cmake"
 
 return {
   "Civitasv/cmake-tools.nvim",
-  commit = "e169948",
   lazy = true,
   init = function()
     local loaded = false
