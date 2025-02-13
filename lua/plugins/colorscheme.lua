@@ -3,7 +3,7 @@ return {
     "bluz71/vim-nightfly-colors",
     name = "nightfly",
     lazy = false,
-    priority = 100,
+    priority = 1000,
     config = function()
       vim.g.nightflyTerminalColors = false
       vim.g.nightflyVirtualTextColor = true
@@ -12,9 +12,18 @@ return {
     end,
   },
   {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    opts = {
+      flavour = "mocha",
+      transparent_background = true,
+    },
+  },
+  {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "nightfly",
+      colorscheme = "catppuccin",
     },
   },
 }
