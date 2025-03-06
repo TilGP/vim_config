@@ -11,6 +11,5 @@ opt.spelllang = { "de", "en" }
 -- disable conceal
 opt.conceallevel = 0
 
-opt.tabstop = 4
-opt.shiftwidth = 4
+opt.shiftwidth = 2
 opt.expandtab = true

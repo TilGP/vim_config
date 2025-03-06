@@ -1,7 +1,11 @@
-local cmake_command = os.getenv("CLANGD_COMMAND") or "clangd"
+local clangd_command = os.getenv("CLANGD_COMMAND") or "clangd"
 
 return {
   "neovim/nvim-lspconfig",
+  dependencies = {
+    "p00f/clangd_extensions.nvim",
+  },
+  ---@class PluginLspOpts
   opts = {
     servers = {
       -- Ensure mason installs the server
@@ -14,7 +18,7 @@ return {
             "Makefile",
             "configure.ac",
             "configure.in",
-            "config.h.in",
+            "config.hpp.in",
             "meson.build",
             "meson_options.txt",
             "build.ninja"
@@ -26,7 +30,7 @@ return {
           offsetEncoding = { "utf-16" },
         },
         cmd = {
-          cmake_command,
+          clangd_command,
           "--background-index",
           "--clang-tidy",
           "--header-insertion=iwyu",
@@ -41,12 +45,24 @@ return {
           clangdFileStatus = true,
         },
       },
+      groovyls = {
+        cmd = {
+          "java",
+          "-jar",
+          "groovy-langauge-server-all.jar",
+        },
+      },
     },
     setup = {
       clangd = function(_, opts)
         local clangd_ext_opts = LazyVim.opts("clangd_extensions.nvim")
+        opts.filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
         require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = opts }))
         return false
+      end,
+      -- disable clangd on proto files as we need bufls to handle protobuf files
+      groovyls = function(_, opts)
+        opts.filetypes = { "groovy", "jenkinsfile" }
       end,
     },
   },

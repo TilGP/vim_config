@@ -5,12 +5,18 @@ return -- lazy.nvim
   opts = {
     ---@type table<string, snacks.win.Config>
     styles = {
-      float = {
-        position = "float",
-        backdrop = 60,
-        height = 0.9,
-        width = 0.9,
-        zindex = 50,
+      scratch = {
+        width = 100,
+        height = 30,
+        bo = { buftype = "", buflisted = false, bufhidden = "hide", swapfile = false },
+        minimal = false,
+        noautocmd = false,
+        -- position = "right",
+        zindex = 20,
+        wo = { winhighlight = "NormalFloat:Normal" },
+        border = "rounded",
+        title_pos = "center",
+        footer_pos = "center",
       },
       minimal = {
         wo = {
@@ -36,6 +42,25 @@ return -- lazy.nvim
       -- your win configuration comes here
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
+    },
+    bigfile = {
+      notify = true, -- show notification when big file detected
+      size = 5 * 1024 * 1024, -- 1.5MB
+      line_length = 1000, -- average line length (useful for minified files)
+      -- Enable or disable features when big file detected
+      ---@param ctx {buf: number, ft:string}
+      setup = function(ctx)
+        if vim.fn.exists(":NoMatchParen") ~= 0 then
+          vim.cmd([[NoMatchParen]])
+        end
+        Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
+        vim.b.minianimate_disable = true
+        vim.schedule(function()
+          if vim.api.nvim_buf_is_valid(ctx.buf) then
+            vim.bo[ctx.buf].syntax = ctx.ft
+          end
+        end)
+      end,
     },
   },
 }

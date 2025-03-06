@@ -1,12 +1,10 @@
-print("hello")
-
 local ok, dap = pcall(require, "dap")
 if not ok then
   return
 end
 
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
-
+local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
 --
 -- See
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Interpreters.html
@@ -18,7 +16,13 @@ dap.adapters.gdb = {
   args = { "--quiet", "--interpreter=dap" },
 }
 
-dap.configurations.c = {
+dap.adapters.codelldb = {
+  type = "executable",
+  command = "lldb-vscode",
+  name = "lldb",
+}
+
+dap.configurations.cpp = {
   {
     name = "Run executable (GDB)",
     type = "gdb",
@@ -28,7 +32,7 @@ dap.configurations.c = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/",
+        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
         completion = "file",
       })
 
@@ -44,7 +48,7 @@ dap.configurations.c = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/",
+        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
         completion = "file",
       })
 
@@ -62,5 +66,25 @@ dap.configurations.c = {
     type = "gdb",
     request = "attach",
     processId = require("dap.utils").pick_process,
+  },
+  {
+    name = "Run executable (LLDB)",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      local path = vim.fn.input({
+        prompt = "Path to executable: ",
+        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        completion = "file",
+      })
+
+      return (path and path ~= "") and path or dap.ABORT
+    end,
+    args = function()
+      local args_str = vim.fn.input({
+        prompt = "Arguments: ",
+      })
+      return vim.split(args_str, " +")
+    end,
   },
 }

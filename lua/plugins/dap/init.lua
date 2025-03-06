@@ -9,7 +9,7 @@ local M = {
     "nvim-telescope/telescope-dap.nvim",
     "mfussenegger/nvim-dap-python",
   },
-  ft = { "c", "go", "lua", "python" },
+  ft = { "cpp", "go", "lua", "python" },
   -- version = '*',
 }
 
@@ -111,15 +111,19 @@ M.config = function()
   keymap({ "n", "v" }, "<leader>d?", function()
     telescope_dap.commands({})
   end, { silent = true, desc = "DAP builtin commands" })
+
   keymap({ "n", "v" }, "<leader>dl", function()
     telescope_dap.list_breakpoints({})
   end, { silent = true, desc = "DAP breakpoint list" })
+
   keymap({ "n", "v" }, "<leader>df", function()
     telescope_dap.frames()
   end, { silent = true, desc = "DAP frames" })
+
   keymap({ "n", "v" }, "<leader>dv", function()
     telescope_dap.variables()
   end, { silent = true, desc = "DAP variables" })
+
   keymap({ "n", "v" }, "<leader>dc", function()
     telescope_dap.configurations()
   end, { silent = true, desc = "DAP debugger configurations" })

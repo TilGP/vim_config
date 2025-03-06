@@ -8,7 +8,6 @@ return {
       vim.g.nightflyTerminalColors = false
       vim.g.nightflyVirtualTextColor = true
       vim.g.nightflyWinSeparator = 2
-      vim.g.nightflyTransparent = true
     end,
   },
   {
@@ -17,13 +16,24 @@ return {
     priority = 1000,
     opts = {
       flavour = "mocha",
-      transparent_background = true,
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "nightfly",
+    },
+  },
+  { -- much bettter than the transparent feature of most colorschemes
+    "xiyaowong/transparent.nvim",
+    opts = {
+      -- table: additional groups that should be cleared
+      extra_groups = {},
+      -- table: groups you don't want to clear
+      exclude_groups = { "SnacksBackdrop" },
+      -- function: code to be executed after highlight groups are cleared
+      -- Also the user event "TransparentClear" will be triggered
+      on_clear = function() end,
     },
   },
 }
