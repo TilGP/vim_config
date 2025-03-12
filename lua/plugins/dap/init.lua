@@ -8,6 +8,7 @@ local M = {
     "nvim-telescope/telescope.nvim",
     "nvim-telescope/telescope-dap.nvim",
     "mfussenegger/nvim-dap-python",
+    "julianolf/nvim-dap-lldb",
   },
   ft = { "cpp", "go", "lua", "python" },
   -- version = '*',
@@ -132,7 +133,7 @@ M.config = function()
 
   -- configure dap-ui and language adapaters
   require("plugins.dap.ui")
-  require("plugins.dap.c")
+  require("plugins.dap.cpp")
 end
 
 return M

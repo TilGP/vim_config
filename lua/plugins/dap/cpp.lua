@@ -4,8 +4,7 @@ if not ok then
 end
 
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
-local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
---
+
 -- See
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Interpreters.html
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Debugger-Adapter-Protocol.html
@@ -16,9 +15,9 @@ dap.adapters.gdb = {
   args = { "--quiet", "--interpreter=dap" },
 }
 
-dap.adapters.codelldb = {
+dap.adapters.lldb = {
   type = "executable",
-  command = "lldb-vscode",
+  command = "/Users/til.pockrandt/projects/reda-engine/tools/docker/wrappers/lldb",
   name = "lldb",
 }
 
@@ -68,8 +67,8 @@ dap.configurations.cpp = {
     processId = require("dap.utils").pick_process,
   },
   {
-    name = "Run executable (LLDB)",
-    type = "codelldb",
+    name = "Run executable with arguments (LLDB)",
+    type = "lldb",
     request = "launch",
     program = function()
       local path = vim.fn.input({
