@@ -11,14 +11,14 @@ dapui.setup({
   },
   mappings = {
     edit = "e",
-    expand = { "<CR>", "<2-LeftMouse>" },
+    expand = { "<CR>", "<2-LeftMouse>", "l" },
     repl = "r",
   },
   element_mappings = {},
   expand_lines = true,
   force_buffers = true,
-  floating = { border = "", mappings = {} },
-  render = { indent = 1 },
+  floating = { border = "rounded", mappings = {} },
+  render = { indent = 3 },
   layouts = {
     {
       elements = {
@@ -65,10 +65,10 @@ dapui.setup({
     icons = {
       pause = "",
       play = " (F5)",
-      step_into = " (F6)",
-      step_over = " (F7)",
-      step_out = " (F8)",
-      step_back = " (F9)",
+      step_into = " (F7)",
+      step_over = " (F8)",
+      step_out = " (F9)",
+      step_back = " (F6)",
       run_last = " (F10)",
       terminate = " (F12)",
       disconnect = " ([l]d)",
