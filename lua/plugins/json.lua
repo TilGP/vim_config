@@ -17,7 +17,7 @@ return {
               extra = {
                 {
                   description = "Config schema",
-                  fileMatch = "**/config.json",
+                  fileMatch = { "**/integrationtest/import_and_search/data/v2/**/config.json" },
                   name = "config.json",
                   url = "file:///Users/til.pockrandt/projects/reda-engine/libs/testruntime/schema/models/config_schema.json",
                 },
