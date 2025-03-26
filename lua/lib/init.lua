@@ -1,5 +1,20 @@
 local M = {}
 
+M.print_file_info = function()
+  local snacks = require("snacks")
+  local file = vim.fn.expand("%:p")
+  local line = vim.fn.line(".")
+  local total_lines = vim.fn.line("$")
+  local col = vim.fn.col(".")
+  local filetype = vim.bo.filetype
+  local percent = math.floor((line / total_lines) * 100)
+
+  local msg =
+    string.format("%s\nline: %d of %d %d%% col: %d\nfiletype: %s", file, line, total_lines, percent, col, filetype)
+
+  snacks.notify.info(msg)
+end
+
 M.change_filetype_window = function()
   local actions = require("telescope.actions")
   local actions_state = require("telescope.actions.state")
