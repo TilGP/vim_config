@@ -4,6 +4,7 @@ if not ok then
 end
 
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
+local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
 
 -- See
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Interpreters.html
@@ -17,7 +18,7 @@ dap.adapters.gdb = {
 
 dap.adapters.lldb = {
   type = "executable",
-  command = "/Users/til.pockrandt/projects/reda-engine/tools/docker/wrappers/lldb",
+  command = lldb_command,
   name = "lldb",
 }
 

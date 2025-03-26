@@ -3,6 +3,11 @@ if not ok then
   return
 end
 
+vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapUIStop", linehl = "", numhl = "DapUIStop" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DapUIStop", linehl = "", numhl = "" })
+vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DapUIStop", linehl = "", numhl = "" })
+vim.fn.sign_define("DapStopped", { text = "󰜴", texthl = "DapUIStop", linehl = "CursorLine", numhl = "" })
+
 dapui.setup({
   icons = {
     collapsed = "",
@@ -11,7 +16,7 @@ dapui.setup({
   },
   mappings = {
     edit = "e",
-    expand = { "<CR>", "<2-LeftMouse>", "l" },
+    expand = { "<CR>", "<2-LeftMouse>", ";" },
     repl = "r",
   },
   element_mappings = {},
@@ -81,12 +86,9 @@ local dap = require("dap")
 dap.listeners.after.event_initialized["dapui_config"] = function()
   dapui.open()
 end
--- dap.listeners.before.event_terminated["dapui_config"] = function(e)
---   require("utils").info(string.format("program '%s' was terminated.", vim.fn.fnamemodify(e.config.program, ":t")))
---   dapui.close()
--- end
---[[
-dap.listeners.before.event_exited['dapui_config'] = function()
-    dapui.close()
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
 end
-]]
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
