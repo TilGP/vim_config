@@ -1,5 +1,16 @@
 local M = {}
 
+M.open_kitty_docs = function()
+  local current_line = vim.fn.getline(".")
+  local first_word = current_line:match("^%s*(%S+)")
+  if first_word then
+    local url = "https://sw.kovidgoyal.net/kitty/conf/#opt-kitty." .. first_word
+    vim.fn.system({ "open", url }) -- Uses macOS 'open' command
+  else
+    print("No valid option found on the current line.")
+  end
+end
+
 M.print_file_info = function()
   local snacks = require("snacks")
   local file = vim.fn.expand("%:p")

@@ -25,4 +25,14 @@ require("which-key").add({
     icon = "i",
     desc = "show information about the current cursor position",
   },
+  {
+    "<C-t>",
+    function()
+      local line = vim.api.nvim_get_current_line()
+      local updated_line = line:gsub("true", "TEMP"):gsub("false", "true"):gsub("TEMP", "false")
+      vim.api.nvim_set_current_line(updated_line)
+    end,
+    icon = "t",
+    desc = "Toggle the first occurrence of true/false",
+  },
 })

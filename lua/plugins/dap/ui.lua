@@ -8,7 +8,7 @@ vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DapUIStop
 vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DapUIStop", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "󰜴", texthl = "DapUIStop", linehl = "CursorLine", numhl = "" })
 
-dapui.setup({
+local config = {
   icons = {
     collapsed = "",
     current_frame = "",
@@ -19,7 +19,7 @@ dapui.setup({
     expand = { "<CR>", "<2-LeftMouse>", ";" },
     repl = "r",
   },
-  element_mappings = {},
+  element_mappings = { stacks = { open = "<CR>", expand = "o" } },
   expand_lines = true,
   force_buffers = true,
   floating = { border = "rounded", mappings = {} },
@@ -79,11 +79,14 @@ dapui.setup({
       disconnect = " ([l]d)",
     },
   },
-})
+}
+
+dapui.setup(config)
 
 local dap = require("dap")
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.setup(config) -- reload the config (resetting the element sizes)
   dapui.open()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
