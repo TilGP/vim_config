@@ -10,6 +10,8 @@ local cmake_command = os.getenv("CMAKE_COMMAND") or "cmake"
 return {
   "Civitasv/cmake-tools.nvim",
   lazy = true,
+  commit = "a5d5bf0",
+  pin = true,
   keys = {
     { "<leader>cb", "<cmd>CMakeBuild<cr>", desc = "Build the configured target with cmake" },
   },
