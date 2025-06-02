@@ -4,6 +4,10 @@
 
 local opt = vim.opt
 
+if require("lib").is_ssh_session() then
+  opt.clipboard = "unnamedplus"
+end
+
 opt.scrolloff = 10
 
 opt.spelllang = { "de", "en" }

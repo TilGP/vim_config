@@ -1,5 +1,11 @@
 local M = {}
 
+-- Returns true if running inside an SSH session, false otherwise
+function M.is_ssh_session()
+  -- Common environment variables set during SSH sessions
+  return os.getenv("SSH_CLIENT") ~= nil or os.getenv("SSH_CONNECTION") ~= nil or os.getenv("SSH_TTY") ~= nil
+end
+
 M.open_kitty_docs = function()
   local current_line = vim.fn.getline(".")
   local first_word = current_line:match("^%s*(%S+)")
