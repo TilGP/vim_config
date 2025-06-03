@@ -62,5 +62,15 @@ return -- lazy.nvim
         end)
       end,
     },
+    lazygit = {
+      config = {
+        git = {
+          paging = {
+            colorArg = "always",
+            pager = 'delta  --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"',
+          },
+        },
+      },
+    },
   },
 }
