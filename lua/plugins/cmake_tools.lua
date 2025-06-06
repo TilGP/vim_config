@@ -1,5 +1,8 @@
 local function getNumberOfCores()
   local handle = io.popen("nproc")
+  if handle == nil then
+    return 8
+  end
   local result = handle:read("*a")
   handle:close()
   return tonumber(result)
