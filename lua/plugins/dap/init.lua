@@ -9,6 +9,7 @@ local M = {
     "nvim-telescope/telescope-dap.nvim",
     "mfussenegger/nvim-dap-python",
     "julianolf/nvim-dap-lldb",
+    "docker/nvim-dap-docker",
   },
   ft = { "cpp", "go", "lua", "python" },
   -- version = '*',
@@ -134,6 +135,11 @@ M.config = function()
   -- configure dap-ui and language adapaters
   require("plugins.dap.ui")
   require("plugins.dap.cpp")
+  require("dap-docker").setup({
+    delve = {
+      path = "docker",
+    },
+  })
 end
 
 return M
