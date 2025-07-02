@@ -31,6 +31,9 @@ return {
       json = {
         enabled = false,
       },
+      xml = {
+        enabled = false,
+      },
     })
   end,
 }
