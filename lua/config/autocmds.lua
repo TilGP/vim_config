@@ -41,8 +41,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
             print("No valid option found on the current line.")
           end
         end,
-        icon = "i",
-        desc = "show information about the current cursor position",
       },
     })
   end,
