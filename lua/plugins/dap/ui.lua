@@ -43,11 +43,11 @@ local config = {
       elements = {
         {
           id = "breakpoints",
-          size = 0.25,
+          size = 0.5,
         },
         {
           id = "stacks",
-          size = 0.75,
+          size = 0.5,
         },
       },
       position = "right",

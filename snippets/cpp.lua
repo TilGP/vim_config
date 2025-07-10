@@ -55,5 +55,39 @@ return {
     t({ "", "", "" }),
     i(0),
     t({ "", "", "#endif" }),
+    f(function()
+      return " // " .. include_guard()
+    end),
+  }),
+  s(
+    "gtest",
+    fmt(
+      [[
+#include "gtest/gtest.h"
+
+class {} : public ::testing::Test
+{{
+protected:
+    void SetUp() override
+    {{
+        {}
+    }}
+
+    void TearDown() override
+    {{
+    }}
+}};
+]],
+      {
+        i(1, "TestName"), -- class name
+        i(0), -- cursor position inside SetUp
+      }
+    )
+  ),
+}, {
+  postfix(".ret", {
+    f(function(_, parent)
+      return "return " .. parent.snippet.env.POSTFIX_MATCH .. ";"
+    end),
   }),
 }

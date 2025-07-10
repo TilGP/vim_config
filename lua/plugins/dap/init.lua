@@ -135,6 +135,7 @@ M.config = function()
   -- configure dap-ui and language adapaters
   require("plugins.dap.ui")
   require("plugins.dap.cpp")
+  require("plugins.dap.python")
   require("dap-docker").setup({
     delve = {
       path = "docker",

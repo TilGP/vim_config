@@ -87,4 +87,18 @@ dap.configurations.cpp = {
       return vim.split(args_str, " +")
     end,
   },
+  {
+    name = "Run executable (LLDB)",
+    type = "lldb",
+    request = "launch",
+    program = function()
+      local path = vim.fn.input({
+        prompt = "Path to executable: ",
+        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        completion = "file",
+      })
+
+      return (path and path ~= "") and path or dap.ABORT
+    end,
+  },
 }

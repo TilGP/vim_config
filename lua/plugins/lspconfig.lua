@@ -37,7 +37,6 @@ local M = {
           "--completion-style=detailed",
           "--function-arg-placeholders",
           "--fallback-style=llvm",
-          "--log=verbose",
         },
         init_options = {
           usePlaceholders = true,
