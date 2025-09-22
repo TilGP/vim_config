@@ -17,3 +17,7 @@ opt.conceallevel = 0
 
 opt.shiftwidth = 4
 opt.expandtab = true
+
+opt.exrc = true
+
+vim.g.mkdp_auto_close = 0
