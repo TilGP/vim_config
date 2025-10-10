@@ -1,10 +1,7 @@
 local clangd_command = os.getenv("CLANGD_COMMAND") or "clangd"
 
-local M = {
+return {
   "neovim/nvim-lspconfig",
-  dependencies = {
-    "p00f/clangd_extensions.nvim",
-  },
   ---@class PluginLspOpts
   opts = {
     servers = {
@@ -12,22 +9,6 @@ local M = {
       clangd = {
         keys = {
           { "<leader>ch", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
-        },
-        root_dir = function(fname)
-          return require("lspconfig.util").root_pattern(
-            "Makefile",
-            "configure.ac",
-            "configure.in",
-            "config.hpp.in",
-            "meson.build",
-            "meson_options.txt",
-            "build.ninja"
-          )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
-            fname
-          ) or vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
-        end,
-        capabilities = {
-          offsetEncoding = { "utf-16" },
         },
         cmd = {
           clangd_command,
@@ -38,10 +19,28 @@ local M = {
           "--function-arg-placeholders",
           "--fallback-style=llvm",
         },
-        init_options = {
-          usePlaceholders = true,
-          completeUnimported = true,
-          clangdFileStatus = true,
+        settings = {
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(
+              "Makefile",
+              "configure.ac",
+              "configure.in",
+              "config.hpp.in",
+              "meson.build",
+              "meson_options.txt",
+              "build.ninja"
+            )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
+              fname
+            ) or vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
+          end,
+          capabilities = {
+            offsetEncoding = { "utf-16" },
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+          },
         },
       },
       groovyls = {
@@ -58,6 +57,7 @@ local M = {
         },
         settings = {
           gopls = {
+            buildFlags = { "-tags=dev" },
             gofumpt = true,
             codelenses = {
               gc_details = true,
@@ -96,9 +96,7 @@ local M = {
     },
     setup = {
       clangd = function(_, opts)
-        local clangd_ext_opts = LazyVim.opts("clangd_extensions.nvim")
         opts.filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
-        require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = opts }))
       end,
       -- disable clangd on proto files as we need bufls to handle protobuf files
       groovyls = function(_, opts)
@@ -134,5 +132,3 @@ local M = {
     },
   },
 }
-
-return M
