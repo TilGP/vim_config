@@ -2,13 +2,32 @@ local clangd_command = os.getenv("CLANGD_COMMAND") or "clangd"
 
 return {
   "neovim/nvim-lspconfig",
+  dependencies = {
+    "thejezzi/lsplocal.nvim",
+  },
   ---@class PluginLspOpts
   opts = {
     servers = {
       -- Ensure mason installs the server
       clangd = {
         keys = {
-          { "<leader>ch", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+          { "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+        },
+        root_markers = {
+          "compile_commands.json",
+          "compile_flags.txt",
+          "configure.ac", -- AutoTools
+          "Makefile",
+          "configure.ac",
+          "configure.in",
+          "config.h.in",
+          "meson.build",
+          "meson_options.txt",
+          "build.ninja",
+          ".git",
+        },
+        capabilities = {
+          offsetEncoding = { "utf-16" },
         },
         cmd = {
           clangd_command,
@@ -19,28 +38,10 @@ return {
           "--function-arg-placeholders",
           "--fallback-style=llvm",
         },
-        settings = {
-          root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(
-              "Makefile",
-              "configure.ac",
-              "configure.in",
-              "config.hpp.in",
-              "meson.build",
-              "meson_options.txt",
-              "build.ninja"
-            )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
-              fname
-            ) or vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
-          end,
-          capabilities = {
-            offsetEncoding = { "utf-16" },
-          },
-          init_options = {
-            usePlaceholders = true,
-            completeUnimported = true,
-            clangdFileStatus = true,
-          },
+        init_options = {
+          usePlaceholders = true,
+          completeUnimported = true,
+          clangdFileStatus = true,
         },
       },
       groovyls = {
@@ -57,7 +58,7 @@ return {
         },
         settings = {
           gopls = {
-            buildFlags = { "-tags=dev" },
+            -- buildFlags = { "-tags=dev" },
             gofumpt = true,
             codelenses = {
               gc_details = true,
