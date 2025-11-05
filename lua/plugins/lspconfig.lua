@@ -95,9 +95,10 @@ return {
         },
       },
     },
+    ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
     setup = {
       clangd = function(_, opts)
-        opts.filetypes = { "c", "cpp", "objc", "objcpp", "cuda" }
+        opts.filetypes = { "c", "cpp", "hpp", "objc", "objcpp", "cuda" }
       end,
       -- disable clangd on proto files as we need bufls to handle protobuf files
       groovyls = function(_, opts)
@@ -107,7 +108,7 @@ return {
       gopls = function(_, opts)
         -- workaround for gopls not supporting semanticTokensProvider
         -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-        require("lazyvim.util").lsp.on_attach(function(client, _)
+        require("snacks.util").lsp.on(function(_, client)
           if client.name == "gopls" then
             if not client.server_capabilities.semanticTokensProvider then
               local semantic = client.config.capabilities.textDocument.semanticTokens

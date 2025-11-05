@@ -63,6 +63,19 @@ return -- lazy.nvim
         end)
       end,
     },
+    picker = {
+      sources = {
+        explorer = {
+          hidden = true,
+        },
+        files = {
+          hidden = true,
+        },
+        grep = {
+          hidden = true,
+        },
+      },
+    },
     lazygit = {
       config = {
         git = {

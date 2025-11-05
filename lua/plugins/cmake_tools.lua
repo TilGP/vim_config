@@ -14,7 +14,8 @@ return {
   "Civitasv/cmake-tools.nvim",
   lazy = true,
   keys = {
-    { "<leader>cb", "<cmd>CMakeBuild<cr>", desc = "Build the configured target with cmake" },
+    { "<leader>cbt", "<cmd>CMakeBuild<cr>", desc = "Build the configured target with cmake" },
+    { "<leader>cba", "<cmd>CMakeQuickBuild all<cr>", desc = "Build all targets with cmake" },
   },
   init = function()
     local loaded = false

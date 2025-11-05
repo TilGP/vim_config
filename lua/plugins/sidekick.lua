@@ -8,6 +8,13 @@ return {
           stopinsert = { "<c-i>", "stopinsert", mode = "t" },
         },
       },
+      mux = {
+        backend = "tmux",
+        enabled = true,
+      },
+    },
+    nes = {
+      enabled = false,
     },
   },
   -- stylua: ignore
@@ -27,6 +34,12 @@ return {
       "<leader>au",
       function() require("sidekick.nes").update() end,
       desc = "Update NES Suggestions",
+      mode = { "n", "i", "x" },
+    },
+    {
+      "<leader>ax",
+      function() require("sidekick.nes").clear() end,
+      desc = "Clear NES Suggestions",
       mode = { "n", "i", "x" },
     },
     {

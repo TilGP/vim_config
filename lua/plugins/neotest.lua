@@ -23,6 +23,13 @@ return {
           },
         })
         table.insert(opts.adapters, "neotest-gtest")
+        opts.adapters["neotest-gtest"] = {
+          debug_adapter = "gdb",
+          is_test_file = function(file)
+            -- the file must end with _test.cpp, .test.cpp
+            return file:match("_test%.cpp$") or file:match("%.test%.cpp$")
+          end,
+        }
       end
 
       if vim.bo.filetype == "go" then
