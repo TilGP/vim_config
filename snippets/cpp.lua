@@ -55,9 +55,6 @@ return {
     t({ "", "", "" }),
     i(0),
     t({ "", "", "#endif" }),
-    f(function()
-      return " // " .. include_guard()
-    end),
   }),
   s(
     "gtest",
