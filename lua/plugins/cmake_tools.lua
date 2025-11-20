@@ -16,6 +16,8 @@ return {
   keys = {
     { "<leader>cbt", "<cmd>CMakeBuild<cr>", desc = "Build the configured target with cmake" },
     { "<leader>cba", "<cmd>CMakeQuickBuild all<cr>", desc = "Build all targets with cmake" },
+    { "<leader>cbsp", "<cmd>CMakeSelectBuildPreset<cr>", desc = "Select build preset" },
+    { "<leader>cbst", "<cmd>CMakeSelectBuildTarget<cr>", desc = "Select build target" },
   },
   init = function()
     local loaded = false

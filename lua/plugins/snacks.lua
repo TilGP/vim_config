@@ -45,7 +45,6 @@ return -- lazy.nvim
     },
     bigfile = {
       notify = true, -- show notification when big file detected
-      size = 5 * 1024 * 1024 * 1024,
       line_length = 1000, -- average line length (useful for minified files)
       -- Enable or disable features when big file detected
       ---@param ctx {buf: number, ft:string}
@@ -58,7 +57,6 @@ return -- lazy.nvim
         vim.schedule(function()
           if vim.api.nvim_buf_is_valid(ctx.buf) then
             vim.bo[ctx.buf].syntax = ctx.ft
-            Snacks.indent.disable()
           end
         end)
       end,

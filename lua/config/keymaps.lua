@@ -49,4 +49,12 @@ require("which-key").add({
     desc = "close unused/untouched buffers",
     silent = true,
   },
+  {
+    "g<s-m>",
+    function()
+      Snacks.picker.marks()
+    end,
+    desc = "Open marks picker",
+    silent = true,
+  },
 })

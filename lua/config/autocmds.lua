@@ -18,6 +18,13 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "bigfile" },
+  callback = function()
+    Snacks.indent.disable()
+  end,
+})
+
 vim.api.nvim_create_autocmd({ "BufWritePost", "FileWritePost" }, {
   pattern = { "groovy", "*.jenkinsfile" },
   callback = function()

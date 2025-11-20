@@ -20,6 +20,19 @@ local last_run = nil
 M.config = function()
   local dap = require("dap")
   local keymap = vim.keymap.set
+  local ESC = string.char(27)
+  local function strip_ansi(s)
+    return s:gsub(ESC .. "%[[0-9;]*[mK]", "")
+  end
+
+  -- Filter für stdout und stderr
+  for _, ev in ipairs({ "event_stdout", "event_stderr", "event_output" }) do
+    dap.listeners.before[ev]["dapui_strip_ansi"] = function(_, body)
+      if body and body.output then
+        body.output = strip_ansi(body.output)
+      end
+    end
+  end
 
   -- Store the config for 'dap.last_run()'
   dap.listeners.after.event_initialized["store_config"] = function(session)
