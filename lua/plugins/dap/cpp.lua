@@ -5,7 +5,10 @@ end
 
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
 local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
-
+local bin_dir = vim.fn.getcwd() .. "/cmake-build-debug/bin/"
+if os.getenv("BUILD_DIR") then
+  bin_dir = os.getenv("BUILD_DIR") .. "/bin/"
+end
 -- See
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Interpreters.html
 -- https://sourceware.org/gdb/current/onlinedocs/gdb.html/Debugger-Adapter-Protocol.html
@@ -32,7 +35,7 @@ dap.configurations.cpp = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        default = bin_dir,
         completion = "file",
       })
 
@@ -48,7 +51,7 @@ dap.configurations.cpp = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        default = bin_dir,
         completion = "file",
       })
 
@@ -74,7 +77,7 @@ dap.configurations.cpp = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        default = bin_dir,
         completion = "file",
       })
 
@@ -94,7 +97,7 @@ dap.configurations.cpp = {
     program = function()
       local path = vim.fn.input({
         prompt = "Path to executable: ",
-        default = vim.fn.getcwd() .. "/cmake-build-debug/bin/",
+        default = bin_dir,
         completion = "file",
       })
 
