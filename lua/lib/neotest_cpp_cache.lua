@@ -1,10 +1,12 @@
---- Shared neotest-cpp executable resolution with caching.
---- Used by the plugin's resolve() and by NeotestCppBuildCache command.
+---Shared neotest-cpp executable resolution with caching.
+---Used by the plugin's resolve() and by NeotestCppBuildCache command.
+---@module 'lib.neotest_cpp_cache'
 local M = {}
 
 local PATTERNS = { "cmake-build-debug/docker-wrappers/tst-*" }
 local USER_EXECUTE = tonumber("00100", 8)
 
+---@return string
 function M.get_cache_dir()
   local root = vim.fn.getcwd()
   return root .. "/.cache/neotest-cpp"
@@ -16,6 +18,8 @@ function M.get_cache_key(file_path)
   return vim.fn.sha256(file_path)
 end
 
+---@param file_path string
+---@return string
 function M.get_cache_file_path(file_path)
   local cache_dir = M.get_cache_dir()
   vim.fn.mkdir(cache_dir, "p")
@@ -44,6 +48,8 @@ function M.read_cache(cache_file)
   return cached_exe
 end
 
+---@param cache_file string
+---@param exe_path string
 function M.write_cache(cache_file, exe_path)
   vim.fn.writefile({ exe_path }, cache_file)
 end
@@ -66,10 +72,10 @@ function M.get_executables()
     :totable()
 end
 
---- Parse gtest JSON output file and check if file_path is in the test list.
---- @param test_list_file string path to JSON file
---- @param file_path string normalized path to match
---- @return string|nil exe_path if file_path found in output (caller must pass it in), nil otherwise
+---Parse gtest JSON output file and check if file_path is in the test list.
+---@param test_list_file string Path to JSON file.
+---@param file_path string Normalized path to match.
+---@return boolean? True if file_path found in output, nil otherwise.
 local function parse_gtest_output_for_file(test_list_file, file_path)
   if vim.fn.filereadable(test_list_file) ~= 1 then
     return nil

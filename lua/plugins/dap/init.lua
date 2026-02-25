@@ -15,12 +15,15 @@ local M = {
   -- version = '*',
 }
 
+---@type { config?: table }|nil
 local last_run = nil
 
 M.config = function()
   local dap = require("dap")
   local keymap = vim.keymap.set
   local ESC = string.char(27)
+  ---@param s string
+  ---@return string
   local function strip_ansi(s)
     return s:gsub(ESC .. "%[[0-9;]*[mK]", "")
   end

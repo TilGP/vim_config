@@ -1,23 +1,34 @@
+---@module 'lib'
 local M = {}
 
--- Returns true if running inside an SSH session, false otherwise
-function M.is_ssh_session()
-  -- Common environment variables set during SSH sessions
-  return os.getenv("SSH_CLIENT") ~= nil or os.getenv("SSH_CONNECTION") ~= nil or os.getenv("SSH_TTY") ~= nil
+---@param bool boolean
+---@return string
+local function bool2str(bool)
+  return bool and "enabled" or "disabled"
 end
 
-M.open_kitty_docs = function()
+---Returns true if running inside an SSH session, false otherwise.
+---@return boolean
+function M.is_ssh_session()
+  return os.getenv("SSH_CLIENT") ~= nil
+    or os.getenv("SSH_CONNECTION") ~= nil
+    or os.getenv("SSH_TTY") ~= nil
+end
+
+---Open kitty docs for the first word on the current line.
+function M.open_kitty_docs()
   local current_line = vim.fn.getline(".")
   local first_word = current_line:match("^%s*(%S+)")
   if first_word then
     local url = "https://sw.kovidgoyal.net/kitty/conf/#opt-kitty." .. first_word
-    vim.fn.system({ "open", url }) -- Uses macOS 'open' command
+    vim.fn.system({ "open", url })
   else
     print("No valid option found on the current line.")
   end
 end
 
-M.print_file_info = function()
+---Print file path, line/col, and filetype to a snacks notification.
+function M.print_file_info()
   local snacks = require("snacks")
   local file = vim.fn.expand("%:p")
   local line = vim.fn.line(".")
@@ -32,7 +43,8 @@ M.print_file_info = function()
   snacks.notify.info(msg)
 end
 
-M.change_filetype_window = function()
+---Open a Telescope picker to change the buffer's filetype.
+function M.change_filetype_window()
   local actions = require("telescope.actions")
   local actions_state = require("telescope.actions.state")
   local pickers = require("telescope.pickers")
@@ -70,21 +82,17 @@ M.change_filetype_window = function()
   filetypes:find()
 end
 
---- Toggle buffer semantic token highlighting for all language servers that support it
---@param bufnr? number the buffer to toggle the clients on
+---Toggle buffer semantic token highlighting for all language servers that support it.
+---@param bufnr? number Buffer to toggle the clients on (default: current).
 function M.toggle_buffer_semantic_tokens(bufnr)
   bufnr = bufnr or 0
   vim.b[bufnr].semantic_tokens_enabled = not vim.b[bufnr].semantic_tokens_enabled
   for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
     if client.server_capabilities.semanticTokensProvider then
       vim.lsp.semantic_tokens[vim.b[bufnr].semantic_tokens_enabled and "start" or "stop"](bufnr, client.id)
-      vim.notify(string.format("Buffer lsp semantic highlighting %s" + bool2str(vim.b[bufnr].semantic_tokens_enabled)))
+      vim.notify(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b[bufnr].semantic_tokens_enabled)))
     end
   end
-end
-
-function bool2str(bool)
-  return bool and "enabled" or "disabled"
 end
 
 return M

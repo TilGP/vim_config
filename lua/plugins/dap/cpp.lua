@@ -3,8 +3,11 @@ if not ok then
   return
 end
 
+---@type string
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
+---@type string
 local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
+---@type string
 local bin_dir = vim.fn.getcwd() .. "/cmake-build-debug/bin/"
 if os.getenv("BUILD_DIR") then
   bin_dir = os.getenv("BUILD_DIR") .. "/bin/"

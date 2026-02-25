@@ -8,6 +8,7 @@ vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DapUIStop
 vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DapUIStop", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "󰜴", texthl = "DapUIStop", linehl = "CursorLine", numhl = "" })
 
+---@type table
 local config = {
   icons = {
     collapsed = "",

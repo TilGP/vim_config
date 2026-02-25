@@ -53,11 +53,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+---@type integer
 local id = vim.api.nvim_create_augroup("startup", {
   clear = false,
 })
 
-local persistbuffer = function(bufnr)
+---@param bufnr? number
+local function persistbuffer(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   vim.fn.setbufvar(bufnr, "bufpersist", 1)
 end
@@ -73,5 +75,14 @@ vim.api.nvim_create_autocmd({ "BufRead" }, {
         persistbuffer()
       end,
     })
+  end,
+})
+
+---Load user commands when LazyVim fires VeryLazy (so we don't require from init.lua).
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  once = true,
+  callback = function()
+    require("config.commands")
   end,
 })
