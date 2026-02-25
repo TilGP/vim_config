@@ -10,6 +10,12 @@ function M.get_cache_dir()
   return root .. "/.cache/neotest-cpp"
 end
 
+--- @param file_path string absolute path to the test file
+--- @return string sha256 hash used as cache key (and cache filename without .txt)
+function M.get_cache_key(file_path)
+  return vim.fn.sha256(file_path)
+end
+
 function M.get_cache_file_path(file_path)
   local cache_dir = M.get_cache_dir()
   vim.fn.mkdir(cache_dir, "p")
@@ -94,7 +100,11 @@ end
 --- @return string|nil
 function M.check_exe_contains_file_sync(exe_path, file_path)
   local test_list_file = vim.fn.tempname()
-  local cmd = string.format("%s --gtest_list_tests --gtest_output=json:%s 2>/dev/null", exe_path, test_list_file)
+  local cmd = string.format(
+    "SKIP_BUILDING=1 %s --gtest_list_tests --gtest_output=json:%s 2>/dev/null",
+    exe_path,
+    test_list_file
+  )
   vim.fn.system(cmd)
   if parse_gtest_output_for_file(test_list_file, file_path) then
     return exe_path
@@ -112,6 +122,7 @@ function M.check_exe_contains_file_async(exe_path, file_path, callback)
   local cmd = { exe_path, "--gtest_list_tests", "--gtest_output=json:" .. test_list_file }
 
   job.start(cmd, {
+    env = { SKIP_BUILDING = "1" },
     on_exit = function(_, code, _)
       vim.schedule(function()
         if code ~= 0 then
@@ -143,12 +154,12 @@ function M.resolve_sync(file_path)
   for _, exe_path in ipairs(executables) do
     if M.check_exe_contains_file_sync(exe_path, file_path) then
       M.write_cache(cache_file, exe_path)
-      vim.notify("Cache miss for " .. file_path .. " -> " .. exe_path, vim.log.levels.DEBUG)
+      vim.notify("Cache miss for " .. file_path .. " -> " .. exe_path, vim.log.levels.INFO)
       return exe_path
     end
   end
 
-  vim.notify("No executable found for " .. file_path, vim.log.levels.DEBUG)
+  vim.notify("No executable found for " .. file_path, vim.log.levels.WARN)
   return nil
 end
 

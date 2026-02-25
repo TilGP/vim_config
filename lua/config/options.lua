@@ -21,3 +21,6 @@ opt.expandtab = true
 opt.exrc = true
 
 vim.g.mkdp_auto_close = 0
+
+-- Only show INFO and above (hide DEBUG logs, e.g. neotest-cpp cache)
+vim.log.level = vim.log.levels.INFO
