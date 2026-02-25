@@ -1,42 +1,125 @@
--- Create the editor command
+-- Create the editor command (async via job.nvim so UI never blocks)
 vim.api.nvim_create_user_command("NeotestCppBuildCache", function()
+  local job = require("job")
   local config = require("neotest-cpp.config").get()
-  local resolve = config.executables.resolve
-  local test_files = vim.fn.glob("**/*.test.cpp", false, true)
+  local root = vim.fn.getcwd()
+  local cache_dir = root .. "/.cache/neotest-cpp"
+  vim.fn.mkdir(cache_dir, "p")
 
+  local test_files = vim.fn.glob("**/*.test.cpp", false, true)
   local total = #test_files
   local processed, cached = 0, 0
   vim.notify(string.format("Building cache for %d test files...", total))
 
-  local function step()
-    local file = test_files[processed + 1]
+  local patterns = { "cmake-build-debug/docker-wrappers/tst-*" }
+  local executables = vim
+    .iter(patterns)
+    :map(function(glob_pattern)
+      return vim.fn.glob(glob_pattern, false, true)
+    end)
+    :flatten()
+    :filter(function(match)
+      local stat = vim.uv.fs_stat(match)
+      if stat and stat.type == "file" then
+        local user_execute = tonumber("00100", 8)
+        return bit.band(stat.mode, user_execute) == user_execute
+      end
+      return false
+    end)
+    :totable()
+
+  local function try_next_file()
+    processed = processed + 1
+    local file = test_files[processed]
     if not file then
       vim.notify(string.format("Cache build complete: %d/%d files cached", cached, total))
       return
     end
 
-    processed = processed + 1
     local abs_path = vim.fn.fnamemodify(file, ":p")
+    local cache_key = vim.fn.sha256(abs_path)
+    local cache_file = cache_dir .. "/" .. cache_key .. ".txt"
 
-    -- Yield to UI before running the next expensive resolve()
-    vim.schedule(function()
-      local ok, exe = pcall(resolve, abs_path)
-      if ok and exe then
-        cached = cached + 1
+    -- Check cache (sync, fast)
+    if vim.fn.filereadable(cache_file) == 1 then
+      local cached_exe = vim.fn.readfile(cache_file)[1]
+      local stat = vim.uv.fs_stat(cached_exe)
+      if stat and stat.type == "file" then
+        local user_execute = tonumber("00100", 8)
+        if bit.band(stat.mode, user_execute) == user_execute then
+          cached = cached + 1
+        end
       end
-
       if processed % 10 == 0 then
         vim.notify(string.format("Progress: %d/%d processed, %d cached", processed, total, cached))
       end
+      vim.schedule(try_next_file)
+      return
+    end
 
-      -- Schedule the next iteration after a short delay
-      vim.defer_fn(step, 0)
-    end)
+    -- Cache miss: try each executable via job (async)
+    local exe_index = 1
+    local function try_next_exe()
+      if exe_index > #executables then
+        if processed % 10 == 0 then
+          vim.notify(string.format("Progress: %d/%d processed, %d cached", processed, total, cached))
+        end
+        vim.schedule(try_next_file)
+        return
+      end
+
+      local exe_path = executables[exe_index]
+      exe_index = exe_index + 1
+      local test_list_file = vim.fn.tempname()
+      local cmd = { exe_path, "--gtest_list_tests", "--gtest_output=json:" .. test_list_file }
+
+      job.start(cmd, {
+        on_exit = function(_, code, _)
+          vim.schedule(function()
+            if code ~= 0 then
+              try_next_exe()
+              return
+            end
+            if vim.fn.filereadable(test_list_file) ~= 1 then
+              try_next_exe()
+              return
+            end
+            local json_content = vim.fn.readfile(test_list_file)
+            local ok, data = pcall(vim.json.decode, table.concat(json_content, "\n"))
+            vim.fn.delete(test_list_file)
+            if not ok or not data.testsuites then
+              try_next_exe()
+              return
+            end
+            for _, testsuite in ipairs(data.testsuites) do
+              for _, test in ipairs(testsuite.testsuite or {}) do
+                local test_file = test.file
+                if test_file then
+                  test_file = vim.fn.fnamemodify(test_file, ":p")
+                  if test_file == abs_path then
+                    vim.fn.writefile({ exe_path }, cache_file)
+                    cached = cached + 1
+                    if processed % 10 == 0 then
+                      vim.notify(string.format("Progress: %d/%d processed, %d cached", processed, total, cached))
+                    end
+                    try_next_file()
+                    return
+                  end
+                end
+              end
+            end
+            try_next_exe()
+          end)
+        end,
+      })
+    end
+
+    try_next_exe()
   end
 
-  step()
+  vim.schedule(try_next_file)
 end, {
-  desc = "Build neotest-cpp cache asynchronously",
+  desc = "Build neotest-cpp cache asynchronously (non-blocking)",
 })
 
 return {
