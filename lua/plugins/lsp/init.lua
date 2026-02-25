@@ -2,17 +2,24 @@
 local clangd = require("plugins.lsp.clangd")
 local gopls = require("plugins.lsp.gopls")
 local groovyls = require("plugins.lsp.groovyls")
+local jsonls = require("plugins.lsp.jsonls")
 
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
     "thejezzi/lsplocal.nvim",
+    {
+      "b0o/SchemaStore.nvim",
+      lazy = true,
+      version = false,
+    },
   },
   opts = {
     servers = {
       clangd = clangd.get(),
       groovyls = groovyls.get(),
       gopls = gopls.get(),
+      jsonls = jsonls.get(),
     },
     ---@type table<string, fun(server: string, opts: table): boolean?>
     setup = {

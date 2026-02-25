@@ -1,4 +1,7 @@
--- Create the editor command (async via shared cache module)
+---Neotest-cpp adapter config and user commands.
+---Module (not a Lazy spec); required by plugins.testing.init.
+---When required: registers NeotestCppBuildCache and NeotestCppCacheInfo; returns neotest-cpp opts.
+
 vim.api.nvim_create_user_command("NeotestCppBuildCache", function()
   local cache = require("lib.neotest_cpp_cache")
 
@@ -31,7 +34,6 @@ end, {
   desc = "Build neotest-cpp cache asynchronously (non-blocking)",
 })
 
--- Show cache key and associated executable for current test file (to find which cache file to delete)
 vim.api.nvim_create_user_command("NeotestCppCacheInfo", function(opts)
   local cache = require("lib.neotest_cpp_cache")
   local file_path = opts.args ~= "" and vim.fn.fnamemodify(opts.args, ":p") or vim.fn.expand("%:p")
@@ -74,44 +76,14 @@ end, {
   nargs = "?",
 })
 
+---Neotest-cpp plugin opts for the dependency spec.
 return {
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "folke/snacks.nvim",
-      "nvim-neotest/nvim-nio",
-      "nvim-lua/plenary.nvim",
-      "nvim-neotest/neotest-plenary",
-      "fredrikaverpil/neotest-golang",
-      {
-        "ryanpholt/neotest-cpp",
-        opts = {
-          executables = {
-            -- Shared caching logic in lua/lib/neotest_cpp_cache.lua (sync for plugin use)
-            resolve = function(file_path)
-              return require("lib.neotest_cpp_cache").resolve_sync(file_path)
-            end,
-            env = function(_)
-              return { SKIP_BUILDING = "0" }
-            end,
-          },
-        },
-      },
-    },
-    opts = function(_, opts)
-      if vim.bo.filetype == "cpp" then
-        table.insert(opts.adapters, "neotest-cpp")
-      end
-
-      if vim.bo.filetype == "go" then
-        opts.adapters["neotest-golang"] = {
-          go_test_args = {
-            "-v",
-            "-race",
-            "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
-          },
-        }
-      end
+  executables = {
+    resolve = function(file_path)
+      return require("lib.neotest_cpp_cache").resolve_sync(file_path)
+    end,
+    env = function(_)
+      return { SKIP_BUILDING = "0" }
     end,
   },
 }
