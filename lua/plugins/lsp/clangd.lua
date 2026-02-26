@@ -5,6 +5,14 @@ local function get()
   return {
     keys = {
       { "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+      {
+        "<leader>cp",
+        function()
+          local word = vim.fn.expand("<cword>")
+          require("snacks").terminal("cppman " .. word)
+        end,
+        desc = "Open cppman for current word",
+      },
     },
     root_markers = {
       "compile_commands.json",

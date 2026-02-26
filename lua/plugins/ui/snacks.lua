@@ -87,5 +87,8 @@ return -- lazy.nvim
     indent = {
       enabled = true,
     },
+    notifier = {
+      level = vim.log.levels.INFO,
+    },
   },
 }

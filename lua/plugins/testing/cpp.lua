@@ -82,8 +82,5 @@ return {
     resolve = function(file_path)
       return require("lib.neotest_cpp_cache").resolve_sync(file_path)
     end,
-    env = function(_)
-      return { SKIP_BUILDING = "0" }
-    end,
   },
 }
