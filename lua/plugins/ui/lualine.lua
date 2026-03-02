@@ -105,17 +105,13 @@ return {
         -- Show current function/symbol via navic
         {
           function()
-            local navic = require("nvim-navic")
-            if navic.is_available() then
-              local location = navic.get_location()
-              if location ~= "" then
-                return "› " .. location
-              end
-            end
-            return ""
+            local location = require("nvim-navic").get_location()
+            return "› " .. location
           end,
           cond = function()
-            return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+            return package.loaded["nvim-navic"]
+              and require("nvim-navic").is_available()
+              and require("nvim-navic").get_location() ~= ""
           end,
           color = { fg = colors.overlay0 },
         },
@@ -125,11 +121,23 @@ return {
       opts.sections.lualine_x = {
         {
           function()
+            return "  " .. require("dap").status()
+          end,
+          cond = function()
+            return package.loaded["dap"] and require("dap").status() ~= ""
+          end,
+          color = function()
+            return { fg = colors.red }
+          end,
+        },
+        {
+          function()
             local clients = vim.lsp.get_clients({ bufnr = 0 })
-            if #clients > 0 then
-              return "󰒋 " .. clients[1].name
-            end
-            return ""
+            return "󰒋 " .. clients[1].name
+          end,
+          cond = function()
+            local clients = vim.lsp.get_clients({ bufnr = 0 })
+            return #clients > 0
           end,
           color = { fg = colors.blue },
         },
