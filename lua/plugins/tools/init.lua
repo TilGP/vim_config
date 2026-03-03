@@ -1,6 +1,6 @@
 ---Collect plugin specs from this directory for Lazy.
 local specs = {}
-for _, name in ipairs({ "cmake_tools", "job", "direnv", "live-server", "mongoose" }) do
+for _, name in ipairs({ "cmake_tools", "job", "direnv", "live-server", "kulala" }) do
   local mod = require("plugins.tools." .. name)
   if type(mod) == "table" then
     if mod[1] and type(mod[1]) == "table" then
