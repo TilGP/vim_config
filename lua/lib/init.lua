@@ -1,6 +1,25 @@
 ---@module 'lib'
 local M = {}
 
+---Require all .lua modules in a directory (except init.lua) and return their results as a list.
+---@param module_path string Lua module path (e.g. "plugins.ui") whose directory to scan.
+---@return table List of return values from each required module.
+function M.require_plugin_specs(module_path)
+  local dir = vim.fn.stdpath("config") .. "/lua/" .. module_path:gsub("%.", "/")
+  local names = {}
+  for name in vim.fs.dir(dir) do
+    if name:match("%.lua$") and name ~= "init.lua" then
+      names[#names + 1] = name:gsub("%.lua$", "")
+    end
+  end
+  table.sort(names)
+  local result = {}
+  for _, mod in ipairs(names) do
+    result[#result + 1] = require(module_path .. "." .. mod)
+  end
+  return result
+end
+
 ---@param bool boolean
 ---@return string
 local function bool2str(bool)

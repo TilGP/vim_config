@@ -1,1 +1,1 @@
-return { require("plugins.snippets.luasnip") }
+return require("lib").require_plugin_specs("plugins.snippets")

@@ -1,8 +1,1 @@
-return {
-  require("plugins.lang.vimtex"),
-  require("plugins.lang.jsonpath"),
-  require("plugins.lang.csvview"),
-  require("plugins.lang.jenkins"),
-  require("plugins.lang.goimplement"),
-  require("plugins.lang.markdown"),
-}
+return require("lib").require_plugin_specs("plugins.lang")

@@ -1,1 +1,1 @@
-return { require("plugins.git.diffview"), require("plugins.git.git_blame") }
+return require("lib").require_plugin_specs("plugins.git")
