@@ -25,7 +25,7 @@ return {
       }
 
       opts.options = opts.options or {}
-      opts.options.component_separators = { left = "│", right = "│" }
+      opts.options.component_separators = { left = "", right = "" }
       opts.options.section_separators = { left = "", right = "" }
       opts.options.globalstatus = true
       opts.options.theme = {
@@ -113,12 +113,35 @@ return {
               and require("nvim-navic").is_available()
               and require("nvim-navic").get_location() ~= ""
           end,
-          color = { fg = colors.overlay0 },
+          color = { fg = colors.overlay0, bg = "NONE" },
         },
       }
 
       -- Right sections
       opts.sections.lualine_x = {
+        Snacks.profiler.status(),
+        {
+          function()
+            return require("noice").api.status.command.get()
+          end,
+          cond = function()
+            return package.loaded["noice"] and require("noice").api.status.command.has()
+          end,
+          color = function()
+            return { fg = Snacks.util.color("Statement") }
+          end,
+        },
+        {
+          function()
+            return require("noice").api.status.mode.get()
+          end,
+          cond = function()
+            return package.loaded["noice"] and require("noice").api.status.mode.has()
+          end,
+          color = function()
+            return { fg = Snacks.util.color("Constant") }
+          end,
+        },
         {
           function()
             return "  " .. require("dap").status()
