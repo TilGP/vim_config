@@ -1,4 +1,4 @@
 return {
-  "sindrets/diffview.nvim",
+  "dlyongemallo/diffview.nvim",
   opts = {},
 }

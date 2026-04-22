@@ -3,7 +3,7 @@
 ---@module 'lib.neotest_cpp_cache'
 local M = {}
 
-local PATTERNS = { "cmake-build-debug/docker-wrappers/tst-*" }
+local PATTERNS = { "cmake-build-debug-v/docker-wrappers/tst-*" }
 local USER_EXECUTE = tonumber("00100", 8)
 
 ---@return string
@@ -106,11 +106,8 @@ end
 --- @return string|nil
 function M.check_exe_contains_file_sync(exe_path, file_path)
   local test_list_file = vim.fn.tempname()
-  local cmd = string.format(
-    "SKIP_BUILDING=1 %s --gtest_list_tests --gtest_output=json:%s 2>/dev/null",
-    exe_path,
-    test_list_file
-  )
+  local cmd =
+    string.format("SKIP_BUILDING=1 %s --gtest_list_tests --gtest_output=json:%s 2>/dev/null", exe_path, test_list_file)
   vim.fn.system(cmd)
   if parse_gtest_output_for_file(test_list_file, file_path) then
     return exe_path

@@ -28,6 +28,32 @@ dap.adapters.lldb = {
   name = "lldb",
 }
 
+---Expand ${VAR} then $VAR in a string using the process environment.
+---Unset variables stay literal so typos are visible.
+---@param s string
+---@return string
+local function expand_env_vars(s)
+  local out = s:gsub("%${([%w_]+)}", function(name)
+    local v = os.getenv(name)
+    return v ~= nil and v or ("${" .. name .. "}")
+  end)
+  out = out:gsub("%$([%w_]+)", function(name)
+    local v = os.getenv(name)
+    return v ~= nil and v or ("$" .. name)
+  end)
+  return out
+end
+
+---@param args_str string
+---@return string[]
+local function input_args_from_prompt(args_str)
+  if args_str == nil or args_str == "" then
+    return {}
+  end
+  local parts = vim.split(args_str, " +")
+  return vim.tbl_map(expand_env_vars, parts)
+end
+
 dap.configurations.cpp = {
   {
     name = "Run executable (GDB)",
@@ -64,7 +90,7 @@ dap.configurations.cpp = {
       local args_str = vim.fn.input({
         prompt = "Arguments: ",
       })
-      return vim.split(args_str, " +")
+      return input_args_from_prompt(args_str)
     end,
   },
   {
@@ -90,7 +116,7 @@ dap.configurations.cpp = {
       local args_str = vim.fn.input({
         prompt = "Arguments: ",
       })
-      return vim.split(args_str, " +")
+      return input_args_from_prompt(args_str)
     end,
   },
   {
