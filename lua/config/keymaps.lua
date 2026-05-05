@@ -2,8 +2,17 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+vim.cmd("packadd nvim.undotree")
+
 ---@type table[]
 require("which-key").add({
+  {
+    "<leader>uu",
+    function()
+      require("undotree").open()
+    end,
+    desc = "open undo tree",
+  },
   {
     "<leader>i",
     function()
@@ -44,4 +53,15 @@ require("which-key").add({
     desc = "Open marks picker",
     silent = true,
   },
+
+  { "<leader><Tab>", group = "tabs" },
+
+  unpack(vim.tbl_map(function(i)
+    return {
+      "<leader><Tab>" .. i,
+      i .. "gt",
+      desc = "Go to tab " .. i,
+      silent = true,
+    }
+  end, vim.fn.range(1, 9))),
 })
