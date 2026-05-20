@@ -1,0 +1,3 @@
+[submodule "DVAP"]
+	path = third-party
+	url = https://github.com/Isletier/DVAP.git
