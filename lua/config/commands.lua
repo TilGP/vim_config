@@ -3,6 +3,11 @@ vim.api.nvim_create_user_command("CCChangeFileType", function()
   require("lib").change_filetype_window()
 end, {})
 
+---User command: toggle semantic token highlighting for the current buffer.
+vim.api.nvim_create_user_command("CCToggleSemanticTokens", function()
+  require("lib").toggle_buffer_semantic_tokens(0)
+end, { desc = "Toggle semantic token highlighting for buffer" })
+
 ---User command: clear all named registers (reduce memory after pasting long content).
 vim.api.nvim_create_user_command("CCWipeReg", function()
   for i = 34, 122 do
