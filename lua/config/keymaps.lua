@@ -7,6 +7,18 @@ vim.cmd("packadd nvim.undotree")
 ---@type table[]
 require("which-key").add({
   {
+    "<X1Mouse>",
+    "<C-o>",
+    desc = "Jump back",
+    silent = true,
+  },
+  {
+    "<X2Mouse>",
+    "<C-i>",
+    desc = "Jump forward",
+    silent = true,
+  },
+  {
     "<leader>uu",
     function()
       require("undotree").open()

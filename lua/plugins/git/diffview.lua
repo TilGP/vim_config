@@ -1,4 +1,4 @@
 return {
-  "dlyongemallo/diffview.nvim",
+  "dlyongemallo/diffview-plus.nvim",
   opts = {},
 }
