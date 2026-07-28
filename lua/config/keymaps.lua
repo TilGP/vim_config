@@ -65,6 +65,42 @@ require("which-key").add({
     desc = "Open marks picker",
     silent = true,
   },
+  {
+    "<leader>yy",
+    function()
+      local filepath = vim.api.nvim_buf_get_name(0)
+      if filepath == "" then
+        vim.notify("No file name for current buffer", vim.log.levels.WARN)
+        return
+      end
+
+      local modify = vim.fn.fnamemodify
+      local line = vim.fn.line(".")
+      local results = {
+        filepath .. ":" .. line,
+        modify(filepath, ":.") .. ":" .. line,
+        modify(filepath, ":~") .. ":" .. line,
+        modify(filepath, ":t") .. ":" .. line,
+      }
+
+      vim.ui.select({
+        "1. Absolute path: " .. results[1],
+        "2. Path relative to CWD: " .. results[2],
+        "3. Path relative to HOME: " .. results[3],
+        "4. Filename: " .. results[4],
+      }, { prompt = "Choose to copy to clipboard:" }, function(choice)
+        if not choice then
+          return
+        end
+        local i = tonumber(choice:sub(1, 1))
+        local result = results[i]
+        vim.fn.setreg("+", result)
+        vim.notify("Copied: " .. result)
+      end)
+    end,
+    desc = "Yank file path:line",
+    silent = true,
+  },
 
   { "<leader><Tab>", group = "tabs" },
 

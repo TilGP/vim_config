@@ -1,3 +1,11 @@
+local nproc = tonumber(vim.fn.system({ "nproc" }))
+
+local jnproc = ""
+
+if 0 ~= nproc then
+  jnproc = "--j=" .. (nproc - 1)
+end
+
 ---Clangd LSP server config.
 ---@return table
 local function get()
@@ -33,6 +41,7 @@ local function get()
     cmd = {
       clangd_command,
       "--background-index",
+      jnproc,
       "--clang-tidy",
       "--header-insertion=iwyu",
       "--completion-style=detailed",
