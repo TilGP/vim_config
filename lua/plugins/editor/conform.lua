@@ -12,14 +12,14 @@ return {
         lsp_format = "fallback", -- not recommended to change
       },
       formatters_by_ft = {
-        lua = { "stylua" },
+        css = { "prettier" },
         fish = { "fish_indent" },
-        sh = { "shfmt" },
         groovy = { "npm-groovy-lint" },
         html = { "htmlbeautifier" },
-        css = { "prettier" },
-        python = { "black" },
         json = { "prettier" },
+        lua = { "stylua" },
+        python = { "black" },
+        sh = { "shfmt" },
       },
       -- The options you set here will be merged with the builtin formatters.
       -- You can also define any custom formatters here.

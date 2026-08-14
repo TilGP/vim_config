@@ -25,5 +25,19 @@ vim.api.nvim_create_user_command("CCRemoveANSI", function()
   vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
 end, { desc = "Remove ANSI escape codes from buffer" })
 
+-- Opens a clang++ error location in the form `<file/path> | <line-number>`,
+-- e.g. `src/foo.cpp | 123`, and moves the cursor to the specified line.
+vim.api.nvim_create_user_command("ClangOpen", function(opts)
+  local file, line = opts.args:match("^%s*(.-)%s*|%s*(%d+)%s*$")
+
+  if not file then
+    vim.notify("Could not parse location: " .. opts.args, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd.edit(vim.fn.fnameescape(file))
+  vim.api.nvim_win_set_cursor(0, { tonumber(line), 0 })
+end, { nargs = "+" })
+
 -- because I'm dumb and keep typing :Qa instead of :qa :)
 vim.cmd("command! Qa qa")
