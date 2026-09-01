@@ -114,4 +114,129 @@ function M.toggle_buffer_semantic_tokens(bufnr)
   end
 end
 
+---Find identifier under/before cursor, treating `_` and `-` as part of the word.
+---Looks at the char under the cursor first, then the char before it (insert/cmdline friendly).
+---@param line string
+---@param cursor_col integer 0-based byte offset
+---@return string|nil word
+---@return integer|nil start_col 1-based byte column
+---@return integer|nil end_col 1-based inclusive byte column
+local function case_word_at(line, cursor_col)
+  local function is_id(i)
+    return i >= 1 and i <= #line and line:sub(i, i):match("[%w_%-]") ~= nil
+  end
+
+  local col
+  if is_id(cursor_col + 1) then
+    col = cursor_col + 1
+  elseif is_id(cursor_col) then
+    col = cursor_col
+  else
+    return nil
+  end
+
+  local start_col = col
+  while start_col > 1 and is_id(start_col - 1) do
+    start_col = start_col - 1
+  end
+
+  local end_col = col
+  while end_col < #line and is_id(end_col + 1) do
+    end_col = end_col + 1
+  end
+
+  return line:sub(start_col, end_col), start_col, end_col
+end
+
+---@return string line
+---@return integer cursor_col 0-based byte offset
+local function get_edit_line()
+  if vim.fn.mode() == "c" then
+    return vim.fn.getcmdline(), vim.fn.getcmdpos() - 1
+  end
+  return vim.api.nvim_get_current_line(), vim.api.nvim_win_get_cursor(0)[2]
+end
+
+---@param line string
+---@param cursor_col integer 0-based byte offset
+local function set_edit_line(line, cursor_col)
+  if vim.fn.mode() == "c" then
+    vim.fn.setcmdline(line, cursor_col + 1)
+    return
+  end
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_set_current_line(line)
+  vim.api.nvim_win_set_cursor(0, { row, cursor_col })
+end
+
+---Split camelCase, kebab-case, or snake_case into lowercase parts.
+---@param word string
+---@return string[]
+local function split_identifier(word)
+  local normalized = word
+    :gsub("([a-z0-9])([A-Z])", "%1 %2")
+    :gsub("([A-Z]+)([A-Z][a-z])", "%1 %2")
+    :gsub("[_%-]+", " ")
+    :lower()
+
+  local parts = {}
+  for part in normalized:gmatch("%S+") do
+    parts[#parts + 1] = part
+  end
+  return parts
+end
+
+---@param parts string[]
+---@return string
+local function to_camel_case(parts)
+  local result = parts[1]
+  for i = 2, #parts do
+    result = result .. parts[i]:sub(1, 1):upper() .. parts[i]:sub(2)
+  end
+  return result
+end
+
+---@param parts string[]
+---@param sep string
+---@return string
+local function join_parts(parts, sep)
+  return table.concat(parts, sep)
+end
+
+---Convert the identifier under the cursor to camelCase, kebab-case, or snake_case.
+---Works in normal, insert, and command-line mode.
+---@param style "camel"|"kebab"|"snake"
+function M.change_word_case(style)
+  local line, cursor_col = get_edit_line()
+  local word, start_col, end_col = case_word_at(line, cursor_col)
+  if not word then
+    vim.notify("No word under cursor", vim.log.levels.WARN)
+    return
+  end
+
+  local parts = split_identifier(word)
+  if #parts == 0 then
+    return
+  end
+
+  local converted
+  if style == "camel" then
+    converted = to_camel_case(parts)
+  elseif style == "kebab" then
+    converted = join_parts(parts, "-")
+  elseif style == "snake" then
+    converted = join_parts(parts, "_")
+  else
+    error("unknown case style: " .. tostring(style))
+  end
+
+  if converted == word then
+    return
+  end
+
+  local new_line = line:sub(1, start_col - 1) .. converted .. line:sub(end_col + 1)
+  -- Place cursor after the converted word (natural for insert/cmdline).
+  set_edit_line(new_line, start_col - 1 + #converted)
+end
+
 return M

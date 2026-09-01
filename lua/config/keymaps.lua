@@ -103,6 +103,32 @@ require("which-key").add({
   },
 
   { "<leader><Tab>", group = "tabs" },
+  -- <C-g>: works in n/i/c without Esc-meta ambiguity (<M-c> becomes Esc+c → change op).
+  { "<C-g>", group = "case", mode = { "n", "i", "c" } },
+  {
+    "<C-g>c",
+    function()
+      require("lib").change_word_case("camel")
+    end,
+    desc = "camelCase",
+    mode = { "n", "i", "c" },
+  },
+  {
+    "<C-g>k",
+    function()
+      require("lib").change_word_case("kebab")
+    end,
+    desc = "kebab-case",
+    mode = { "n", "i", "c" },
+  },
+  {
+    "<C-g>s",
+    function()
+      require("lib").change_word_case("snake")
+    end,
+    desc = "snake_case",
+    mode = { "n", "i", "c" },
+  },
 
   unpack(vim.tbl_map(function(i)
     return {
