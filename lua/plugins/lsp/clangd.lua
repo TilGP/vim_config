@@ -11,6 +11,7 @@ end
 local function get()
   local clangd_command = os.getenv("CLANGD_COMMAND") or "clangd"
   return {
+    mason = false,
     keys = {
       { "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
       {

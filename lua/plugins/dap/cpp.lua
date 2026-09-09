@@ -6,7 +6,7 @@ end
 ---@type string
 local gdb_command = os.getenv("GDB_COMMAND") or "gdb"
 ---@type string
-local lldb_command = os.getenv("LLDB_COMMAND") or "lldb"
+local lldb_command = os.getenv("LLDB_COMMAND") or "lldb-dap"
 ---@type string
 local bin_dir = vim.fn.getcwd() .. "/cmake-build-debug/bin/"
 if os.getenv("BUILD_DIR") then
