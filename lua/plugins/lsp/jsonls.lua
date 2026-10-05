@@ -1,19 +1,10 @@
----Jsonls LSP server config (SchemaStore + project-specific schema).
+---Jsonls LSP server config (SchemaStore; project schemas live in per-project .nvim.lua).
 ---@return table
 local function get()
   return {
     settings = {
       json = {
-        schemas = require("schemastore").json.schemas({
-          extra = {
-            {
-              description = "Config schema",
-              fileMatch = { "**/integrationtest/import_and_search/data/v2/**/config.json" },
-              name = "config.json",
-              url = "file:///Users/til.pockrandt/projects/reda-engine/libs/testruntime/schema/models/config_schema.json",
-            },
-          },
-        }),
+        schemas = require("schemastore").json.schemas(),
         format = {
           enable = true,
         },
