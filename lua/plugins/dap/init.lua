@@ -61,67 +61,64 @@ M.config = function()
     virt_text_pos = "eol",
   })
 
-  keymap(
-    { "n", "v" },
-    "<leader>du",
-    "<cmd>lua require('dapui').toggle({ })<cr>",
-    { silent = true, desc = "Toggle DAP-UI" }
-  )
-  keymap({ "n", "v" }, "<F3>", "<cmd>lua require('dapui').toggle()<CR>", { silent = true, desc = "DAP toggle UI" })
-  keymap({ "n", "v" }, "<F4>", "<cmd>lua require('dap').pause()<CR>", { silent = true, desc = "DAP pause (thread)" })
-  keymap(
-    { "n", "v" },
-    "<F5>",
-    "<cmd>lua require('dap').continue()<CR>",
-    { silent = true, desc = "DAP launch or continue" }
-  )
-  keymap({ "n", "v" }, "<F7>", "<cmd>lua require('dap').step_into()<CR>", { silent = true, desc = "DAP step into" })
-  keymap({ "n", "v" }, "<F8>", "<cmd>lua require('dap').step_over()<CR>", { silent = true, desc = "DAP step over" })
-  keymap({ "n", "v" }, "<F9>", "<cmd>lua require('dap').step_out()<CR>", { silent = true, desc = "DAP step out" })
-  keymap({ "n", "v" }, "<F6>", "<cmd>lua require('dap').step_back()<CR>", { silent = true, desc = "DAP step back" })
+  local dapui = require("dapui")
+
+  keymap({ "n", "v" }, "<leader>du", function()
+    dapui.toggle({})
+  end, { silent = true, desc = "Toggle DAP-UI" })
+  keymap({ "n", "v" }, "<F3>", function()
+    dapui.toggle()
+  end, { silent = true, desc = "DAP toggle UI" })
+  keymap({ "n", "v" }, "<F4>", function()
+    dap.pause()
+  end, { silent = true, desc = "DAP pause (thread)" })
+  keymap({ "n", "v" }, "<F5>", function()
+    dap.continue()
+  end, { silent = true, desc = "DAP launch or continue" })
+  keymap({ "n", "v" }, "<F7>", function()
+    dap.step_into()
+  end, { silent = true, desc = "DAP step into" })
+  keymap({ "n", "v" }, "<F8>", function()
+    dap.step_over()
+  end, { silent = true, desc = "DAP step over" })
+  keymap({ "n", "v" }, "<F9>", function()
+    dap.step_out()
+  end, { silent = true, desc = "DAP step out" })
+  keymap({ "n", "v" }, "<F6>", function()
+    dap.step_back()
+  end, { silent = true, desc = "DAP step back" })
   keymap({ "n", "v" }, "<F10>", function()
     dap_run_last()
   end, { silent = true, desc = "DAP run last" })
   -- F11 is used by KDE for fullscreen
-  keymap({ "n", "v" }, "<F12>", "<cmd>lua require('dap').terminate()<CR>", { silent = true, desc = "DAP terminate" })
-  keymap(
-    { "n", "v" },
-    "<leader>dd",
-    "<cmd>lua require('dap').disconnect({ terminateDebuggee = false })<CR>",
-    { silent = true, desc = "DAP disconnect" }
-  )
-  keymap(
-    { "n", "v" },
-    "<leader>dt",
-    "<cmd>lua require('dap').disconnect({ terminateDebuggee = true })<CR>",
-    { silent = true, desc = "DAP disconnect and terminate" }
-  )
-  keymap(
-    { "n", "v" },
-    "<leader>db",
-    "<cmd>lua require('dap').toggle_breakpoint()<CR>",
-    { silent = true, desc = "DAP toggle breakpoint" }
-  )
-  keymap(
-    { "n", "v" },
-    "<leader>dB",
-    "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-    { silent = true, desc = "DAP set breakpoint with condition" }
-  )
-  keymap(
-    { "n", "v" },
-    "<leader>dp",
-    "<cmd>lua require('dap').set_breakpoint(nil, nil, vim.fn.input('log point message: '))<cr>",
-    { silent = true, desc = "dap set breakpoint with log point message" }
-  )
+  keymap({ "n", "v" }, "<F12>", function()
+    dap.terminate()
+  end, { silent = true, desc = "DAP terminate" })
+  keymap({ "n", "v" }, "<leader>dd", function()
+    dap.disconnect({ terminateDebuggee = false })
+  end, { silent = true, desc = "DAP disconnect" })
+  keymap({ "n", "v" }, "<leader>dt", function()
+    dap.disconnect({ terminateDebuggee = true })
+  end, { silent = true, desc = "DAP disconnect and terminate" })
+  keymap({ "n", "v" }, "<leader>db", function()
+    dap.toggle_breakpoint()
+  end, { silent = true, desc = "DAP toggle breakpoint" })
+  keymap({ "n", "v" }, "<leader>dB", function()
+    dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+  end, { silent = true, desc = "DAP set breakpoint with condition" })
+  keymap({ "n", "v" }, "<leader>dp", function()
+    dap.set_breakpoint(nil, nil, vim.fn.input("log point message: "))
+  end, { silent = true, desc = "dap set breakpoint with log point message" })
+
+  keymap({ "n", "v" }, "<leader>dC", function()
+    dap.run_to_cursor()
+  end, { silent = true, desc = "dap run to cursor" })
+
   --[[
     -- Only needed if we don't use dap-ui
-    keymap(
-        { 'n', 'v' },
-        '<leader>dr',
-        "<cmd>lua require('dap').repl.toggle()<CR>",
-        { silent = true, desc = 'DAP toggle debugger REPL' }
-    )
+    keymap({ "n", "v" }, "<leader>dr", function()
+      dap.repl.toggle()
+    end, { silent = true, desc = "DAP toggle debugger REPL" })
 ]]
 
   local telescope_dap = require("telescope").extensions.dap
