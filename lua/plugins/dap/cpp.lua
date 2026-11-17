@@ -28,6 +28,15 @@ dap.adapters.lldb = {
   name = "lldb",
 }
 
+dap.adapters.codelldb = {
+  type = "server",
+  port = "${port}",
+  executable = {
+    command = "codelldb",
+    args = { "--port", "${port}" },
+  },
+}
+
 ---Expand ${VAR} then $VAR in a string using the process environment.
 ---Unset variables stay literal so typos are visible.
 ---@param s string
@@ -132,5 +141,45 @@ dap.configurations.cpp = {
 
       return (path and path ~= "") and path or dap.ABORT
     end,
+  },
+  {
+    name = "Run executable (CodeLLDB)",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      local path = vim.fn.input({
+        prompt = "Path to executable: ",
+        default = bin_dir,
+        completion = "file",
+      })
+
+      return (path and path ~= "") and path or dap.ABORT
+    end,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+    terminal = "console",
+  },
+  {
+    name = "Run executable with arguments (CodeLLDB)",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      local path = vim.fn.input({
+        prompt = "Path to executable: ",
+        default = bin_dir,
+        completion = "file",
+      })
+
+      return (path and path ~= "") and path or dap.ABORT
+    end,
+    args = function()
+      local args_str = vim.fn.input({
+        prompt = "Arguments: ",
+      })
+      return input_args_from_prompt(args_str)
+    end,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+    terminal = "console",
   },
 }
